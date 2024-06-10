@@ -5,8 +5,8 @@ import UserRouters from './routers/UserRouter';
 
 dotenv.config(); // Carrega as variáveis de ambiente a partir de um arquivo .env
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+export const app = express();
+const PORT = process.env.PORT || 3030;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/myapp';
 
 // Middleware para processar o corpo das requisições como JSON

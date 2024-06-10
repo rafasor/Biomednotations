@@ -10,13 +10,15 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./",
+    
     "paths": {
       "*": [
         "node_modules/*"
       ]
     },
     "types": [
-      "node"
+      "node",
+      "jest"
     ]
   },
   "include": [
