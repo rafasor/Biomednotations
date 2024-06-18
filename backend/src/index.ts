@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import UserRouters from './routers/UserRouter';
+import AnalysisRouter from './routers/AnalysisRouter';
+import PatientRouter from './routers/PatientRouter';
 
 dotenv.config(); // Carrega as variáveis de ambiente a partir de um arquivo .env
 
@@ -14,6 +16,8 @@ app.use(express.json());
 
 // Configuração das rotas
 app.use('/api', UserRouters);
+app.use('/api', PatientRouter)
+app.use('/api', AnalysisRouter)
 
 // Middleware para tratamento de erros
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
