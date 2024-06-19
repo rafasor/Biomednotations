@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Document, Types, Model } from 'mongoose';
 
 export interface IAnalysis extends Document {
   userId: string;
@@ -10,9 +10,9 @@ export interface IAnalysis extends Document {
   batch: string;
   result: string;
   observations: string;
-  resultComparison: string;
 }
 
+// Define o esquema da análise
 const analysisSchema = new Schema<IAnalysis>({
   userId: { type: String, required: true },
   patientId: { type: Schema.Types.ObjectId, ref: 'Patient', required: true },
@@ -23,9 +23,10 @@ const analysisSchema = new Schema<IAnalysis>({
   batch: { type: String, required: true },
   result: { type: String, required: true },
   observations: { type: String, required: true },
-  resultComparison: { type: String, required: true },
 });
 
-const AnalysisModel = model<IAnalysis>('Analysis', analysisSchema);
+// Cria o modelo com base no esquema
+const AnalysisModel: Model<IAnalysis> = model<IAnalysis>('Analysis', analysisSchema);
 
+// Exporta o modelo
 export default AnalysisModel;

@@ -6,6 +6,11 @@ import Jwt  from 'jsonwebtoken';
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password, RA } = req.body;
+    console.log('Received data:', req.body);
+
+    if (!password) {
+      return res.status(400).json({ error: 'Password is required' });
+    }
 
     // Verificar se o RA já existe
     const existingUser = await UserModel.findOne({ RA });
@@ -24,6 +29,8 @@ export const createUser = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
 
 export const loginUser = async (req: Request, res: Response) => {
   try {

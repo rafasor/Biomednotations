@@ -2,14 +2,17 @@ import { Request, Response } from 'express';
 import AnalysisModel, { IAnalysis } from '../models/Analysis';
 import PatientModel from '../models/Patient';
 
+// Código de cadastro de análise para o paciente
+
 export const createAnalysisForPatient = async (req: Request, res: Response) => {
   try {
     if (!(req as any).user) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const userId = (req as any).user._id;  // ID do usuário autenticado
-    const { patientId } = req.params;
+    const userId = (req as any).user._id; // ID do usuário autenticado
+    const { patientId } = req.params; // Captura o patientId da URL
+
     const {
       examTechnique,
       sample,
@@ -18,15 +21,19 @@ export const createAnalysisForPatient = async (req: Request, res: Response) => {
       batch,
       result,
       observations,
-      resultComparison
     } = req.body;
 
-    const patient = await PatientModel.findOne({ _id: patientId, userId });
+    console.log('Dados recebidos para criar análise:', req.body); // Log para depuração
+
+    // Procurar o paciente usando userId e patientId
+    const patient = await PatientModel.findOne({ userId, _id: patientId });
+
     if (!patient) {
-      return res.status(404).json({ message: 'Patient not found' });
+      console.log('Patient not found for user:', userId); // Log para depuração
+      return res.status(404).json({ message: 'Paciente não encontrado para este usuário.' });
     }
 
-    const analysis: IAnalysis = new AnalysisModel({
+    const analysis = new AnalysisModel({
       userId,
       patientId,
       examTechnique,
@@ -36,26 +43,30 @@ export const createAnalysisForPatient = async (req: Request, res: Response) => {
       batch,
       result,
       observations,
-      resultComparison
     });
 
     const newAnalysis = await analysis.save();
-    res.status(201).json({ message: 'Analysis created successfully', analysis: newAnalysis });
+    res.status(201).json({ message: 'Análise criada com sucesso', analysis: newAnalysis });
   } catch (error) {
-    console.error('Error creating analysis for patient:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Erro ao criar análise para paciente:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
 
 
-export const getAnalyses = async (req: Request, res: Response) => {
+
+
+export const getAnalysesByPatientId = async (req: Request, res: Response) => {
   try {
     if (!(req as any).user) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const userId = (req as any).user._id;  // ID do usuário autenticado
-    const analyses = await AnalysisModel.find({ userId });
+    const { patientId } = req.params;
+
+    // Fetch analyses associated with the specified patient
+    const analyses = await AnalysisModel.find({ patientId });
+
     res.status(200).json(analyses);
   } catch (error) {
     console.error('Error fetching analyses:', error);
